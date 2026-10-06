@@ -1,4 +1,4 @@
-# SINGXXXX 夜间客服机器人（方案 v0.2）
+# SINGXXXX 夜间客服机器人（方案 v0.3）
 
 > 面试方案与流程原型，作者 Toni，2026-10-06。
 > 公司名已匿名为 SINGXXXX，不是该公司官方渠道。演示中的产品名称和价格为示例，库存数量为虚构数据。
@@ -18,13 +18,14 @@
 | 路径 | 内容 |
 | --- | --- |
 | [roadmap.md](roadmap.md) | 技术路线与实施计划：接哪些 API、资料库、部署、周期、维护、成本、风险 |
-| [index.html](index.html) | 流程原型（英文界面）：三个夜间对话场景 + 自动生成的交接工单 |
+| [index.html](index.html) | 流程原型（中英双语界面，右上角切换）：三个夜间对话场景 + 自动生成的交接工单 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本记录 |
 
 ## 怎么看演示
 
-1. 下载 `index.html`（或整个仓库：Code → Download ZIP）。
-2. 用浏览器打开，不需要联网。
-3. 点上方三个场景按钮，或在输入框里直接提问（例如 `price of DL-A`、`battery`、`gap`）。
+- 在线版：<https://shelikeit69.github.io/Singxxxx-night-assistant/>（中文版：在网址后加 `?lang=zh`，或点右上角「中文」）
+- 离线版：下载 `index.html`，用浏览器打开，不需要联网。
+
+页面上可以点三个场景按钮，也可以点「常见问题」按钮或直接输入问题（例如「门和闸一起装，预算 1200」、`price of DL-A`）。
 
 原型用关键词匹配模拟对话，没有连接任何 API；正式版按 `roadmap.md` 接入大模型、WhatsApp 和公司表格。

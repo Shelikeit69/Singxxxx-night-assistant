@@ -23,6 +23,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,
 .banner b{font-weight:700}
 header{max-width:1180px;margin:0 auto;padding:22px 16px 6px}
 h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.lang.big button{font-size:14px;padding:6px 14px}
 .sub{color:var(--muted);margin:0}
 .scen{max-width:1180px;margin:14px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap}
 .scen button{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:999px;cursor:pointer;font-size:14px}
@@ -96,46 +98,46 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
 </head>
 <body>
 
-<div class="banner"><b>Concept prototype by Toni</b> for a Singapore smart-lock retailer, anonymised as SINGXXXX. Not an official channel. Product names and prices are <b>illustrative</b>; stock levels are <b>mock data</b>.</div>
+<div class="banner" data-i18n="banner"></div>
 
 <header>
-  <h1>After-Hours Lock Assistant</h1>
-  <p class="sub">What a late-night WhatsApp enquiry could look like, and the handover ticket the team would find at 9:30am.</p>
+  <div class="hd"><h1 data-i18n="title"></h1><span class="lang big" id="langTop"><button data-l="en">EN</button><button data-l="zh">中文</button></span></div>
+  <p class="sub" data-i18n="sub"></p>
 </header>
 
 <div class="scen" id="scen">
-  <button data-s="bto" class="on">1 · New BTO owner, 11:42pm</button>
-  <button data-s="battery">2 · Existing customer, battery problem</button>
-  <button data-s="limits">3 · What the bot must not promise</button>
-  <button id="replay" style="margin-left:auto">↻ Replay</button>
+  <button data-s="bto" class="on" data-i18n="sc1"></button>
+  <button data-s="battery" data-i18n="sc2"></button>
+  <button data-s="limits" data-i18n="sc3"></button>
+  <button id="replay" style="margin-left:auto" data-i18n="replay"></button>
 </div>
 
 <div class="grid">
   <div class="card">
     <div class="phone-head">
       <div class="avatar">SX</div>
-      <div><div class="t">Lock Assistant (prototype)</div><div class="s">Answers 24/7 · hands over to the team during office hours</div></div>
+      <div><div class="t" data-i18n="botName"></div><div class="s" data-i18n="botSub"></div></div>
     </div>
     <div class="chat" id="chat" aria-live="polite"></div>
     <div class="faq">
-      <div class="top"><span class="lbl">Common questions · tap to ask</span><span class="lang"><button data-l="en" class="on">EN</button><button data-l="zh">中文</button></span></div>
+      <div class="top"><span class="lbl" data-i18n="faqLbl"></span></div>
       <div class="chips" id="chips"></div>
     </div>
     <div class="inputbar">
-      <input id="q" placeholder="Ask anything in English or 中文, e.g. budget $1,200 door + gate…" autocomplete="off">
-      <button id="send">Send</button>
+      <input id="q" autocomplete="off">
+      <button id="send" data-i18n="send"></button>
     </div>
-    <div class="hint">Offline demo: answers come from a fixed FAQ and product list via keyword matching, and each reply shows its source. The real version uses an AI model reading the same sources.</div>
+    <div class="hint" data-i18n="hint"></div>
   </div>
 
   <div class="card side">
-    <div class="tally"><div><b id="nAns">0</b><span>answered by the bot</span></div><div><b id="nHand">0</b><span>handed to the team</span></div></div>
-    <h2>Handover ticket <span class="pill" id="prio">Waiting</span></h2>
+    <div class="tally"><div><b id="nAns">0</b><span data-i18n="tAns"></span></div><div><b id="nHand">0</b><span data-i18n="tHand"></span></div></div>
+    <h2><span data-i18n="ticketH"></span> <span class="pill" id="prio"></span></h2>
     <div class="ticket" id="ticket"></div>
     <div class="stock">
-      <div class="h">Stock check · MOCK DATA (to be replaced by the real inventory sheet)</div>
+      <div class="h" data-i18n="stockH"></div>
       <table>
-        <thead><tr><th>Model</th><th>Type</th><th class="n">Price*</th><th class="n">Units</th></tr></thead>
+        <thead><tr><th data-i18n="thModel"></th><th data-i18n="thType"></th><th class="n" data-i18n="thPrice"></th><th class="n" data-i18n="thUnits"></th></tr></thead>
         <tbody id="stock"></tbody>
       </table>
     </div>
@@ -143,61 +145,19 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
 </div>
 
 <section class="wide">
-  <h2 class="sec">How I would build it</h2>
+  <h2 class="sec" data-i18n="planH"></h2>
   <div class="cols">
-    <div class="phase">
-      <div class="no">Step 1 · Answer</div>
-      <h3>Reply to common questions at night</h3>
-      <ul>
-        <li>Knowledge base from the website product list and the FAQ, in English and Chinese</li>
-        <li>Covers price, unlock methods, battery, warranty, install time, door/gate fit</li>
-        <li>Anything unclear goes to a person the next morning</li>
-      </ul>
-    </div>
-    <div class="phase">
-      <div class="no">Step 2 · Collect</div>
-      <h3>Turn the chat into a ready ticket</h3>
-      <ul>
-        <li>Ask property type, door or gate, postal code, preferred day, photo of the door</li>
-        <li>Postal code gives the area, so installs can be grouped by area</li>
-        <li>Door type gives an install-time estimate (FAQ: wooden door ~2h, metal gate ~1h)</li>
-      </ul>
-    </div>
-    <div class="phase">
-      <div class="no">Step 3 · Connect</div>
-      <h3>Check stock and open slots</h3>
-      <ul>
-        <li>Read one shared inventory sheet (Google Sheets or Lark Base)</li>
-        <li>Later: read the installers' calendar to suggest real slots</li>
-        <li>Price and install date are always confirmed by a person</li>
-      </ul>
-    </div>
+    <div class="phase"><div class="no" data-i18n="p1no"></div><h3 data-i18n="p1h"></h3><ul data-i18n="p1ul"></ul></div>
+    <div class="phase"><div class="no" data-i18n="p2no"></div><h3 data-i18n="p2h"></h3><ul data-i18n="p2ul"></ul></div>
+    <div class="phase"><div class="no" data-i18n="p3no"></div><h3 data-i18n="p3h"></h3><ul data-i18n="p3ul"></ul></div>
   </div>
-
   <div class="two" style="margin-top:12px">
-    <div class="box">
-      <b>Questions I would need answered first</b>
-      <ol>
-        <li>Where is stock tracked today: Shopify, Excel, Lark, or by memory?</li>
-        <li>Roughly how many enquiries come in after 6pm, and on which channel?</li>
-        <li>Is the company WhatsApp number already on the WhatsApp Business app or API?</li>
-        <li>Who picks up the night tickets in the morning, sales or operations?</li>
-        <li>Which answers should never be automated (discounts, special doors, commercial sites)?</li>
-      </ol>
-    </div>
-    <div class="box">
-      <b>Limits and risks, stated upfront</b>
-      <ul>
-        <li>Automated WhatsApp replies need the WhatsApp Business Platform through a provider, with business verification and per-conversation costs. To be assessed before committing.</li>
-        <li>Customer phone numbers, addresses and door photos are personal data under the PDPA. Access and storage need to be decided.</li>
-        <li>The bot gives guidance, not commitments. A wrong promise costs more than a slow reply.</li>
-        <li>The website has a few inconsistent figures (e.g. install time 60–90 min vs 1–2 h; battery 2–3 vs 3–4 months). These should be settled before the bot quotes them.</li>
-      </ul>
-    </div>
+    <div class="box"><b data-i18n="qH"></b><ol data-i18n="qOl"></ol></div>
+    <div class="box"><b data-i18n="rH"></b><ul data-i18n="rUl"></ul></div>
   </div>
 </section>
 
-<footer>* Product names and prices are illustrative, not real quotes. Unit counts are invented for the demo. This page is a scripted simulation, not a live bot.</footer>
+<footer data-i18n="footer"></footer>
 
 <script>
 (function(){
@@ -227,10 +187,10 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
   var MOCK_UNITS = {"DL-A":6,"DL-B":0,"DL-C":4,"DL-D":3,"DL-E":9,"DL-F":5,"GL-A":7,"GL-B":2,"GL-C":8};
 
   var FIELDS = [
-    ["type","Ticket type"],["received","Received"],["customer","Customer"],["property","Property"],
-    ["fit","Door / gate"],["postal","Postal code"],["zone","Area (approx.)"],["interest","Interested in"],
-    ["stock","Stock check"],["install","Est. install time"],["slot","Preferred slot"],["photo","Door photo"],
-    ["next","Next action (9:30am)"]
+    ["type","Ticket type","工单类型"],["received","Received","收到时间"],["customer","Customer","客户"],["property","Property","房型"],
+    ["fit","Door / gate","门 / 闸"],["postal","Postal code","邮编"],["zone","Area (approx.)","区域（约）"],["interest","Interested in","意向"],
+    ["stock","Stock check","库存"],["install","Est. install time","预计安装时长"],["slot","Preferred slot","首选时段"],["photo","Door photo","门的照片"],
+    ["next","Next action (9:30am)","下一步（9:30）"]
   ];
 
   // ---------- Scripted scenarios ----------
@@ -276,48 +236,152 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
       {sys:"Bot did not quote price or time · escalated"}
     ]}
   };
+  var lang = /[?&]lang=zh/.test(location.search) ? 'zh' : 'en';
+
+  // ---------- Chinese version of the scripted scenarios (same step order as S) ----------
+  var ZHS = {
+    bto: {prio:"销售线索", steps:[
+      {sys:"周二 晚上 11:42 · 非办公时间"},
+      {c:"你好，刚拿到 BTO 钥匙。想给大门和铁闸装锁，最好能刷脸。预算 1200 左右，有货吗？", t:"晚上 11:42",
+        tk:{type:"销售线索 · 新房", received:"周二 晚上 11:42（下班后）", customer:"WhatsApp +65 •••• 4471"}},
+      {b:"您好！恭喜入住新家 🏠 我是夜间客服助手，现在可以先给您介绍，同事明早 9:30 后会再确认。\n\n预算 $1,200 左右、门和闸都能刷脸，这几个套装合适：\n• DL-A + GL-A – $1,200（AI 门锁，3D 人脸 + 掌静脉，摄像头）\n• DL-B + GL-A – $1,150（超清广角摄像头）\n• DL-C + GL-A – $1,100（内置应急电池）\n\n您家大门是 HDB 标准木门、闸是铁闸吗？", t:"晚上 11:42",
+        tk:{property:"HDB BTO", interest:"门 + 闸套装，刷脸，预算约 $1,200"}},
+      {c:"对，木门加铁闸。铁闸离门挺近的，装得下吗？", t:"晚上 11:44"},
+      {b:"一般没问题。门和闸之间大约需要 6 厘米，具体看把手方向。\n\n为了确认，麻烦从走廊拍一张门和闸的合照？", t:"晚上 11:44",
+        tk:{fit:"木门 + 铁闸 · 间距待确认"}},
+      {c:"[照片]", t:"晚上 11:46", tk:{photo:"晚上 11:46 已收到 ✓"}},
+      {b:"收到，谢谢。最后两个问题，方便同事安排安装：\n1）您的邮编？\n2）哪天方便？安装时间是周一至周六 9:30–18:00。", t:"晚上 11:46"},
+      {c:"520123。周六上午最好", t:"晚上 11:47",
+        tk:{postal:"520123", zone:"东区（52 区）", slot:"周六上午", install:"约 3 小时（FAQ：木门约 2 小时 + 铁闸约 1 小时）"}},
+      {},
+      {b:"库存提示：DL-A 和 GL-A 有货，DL-B 暂时缺货，所以建议选 DL-A + GL-A（$1,200）。\n\n资料已经转给同事，明早 9:30 后会有同事 WhatsApp 您确认价格和周六的时段。现在还没有预约，今晚也不需要付款。", t:"晚上 11:47",
+        tk:{stock:"DL-A ✓ · GL-A ✓ · DL-B 缺货（模拟数据）", interest:"DL-A + GL-A 套装（$1,200）· 备选：DL-C + GL-A", next:"确认价格 + 周六上午时段；和当天其他东区安装排在一起"}},
+      {c:"好的，谢谢！", t:"晚上 11:48"},
+      {sys:"工单已保存 · 等早班同事处理"}
+    ]},
+    battery: {prio:"售后 · 紧急", steps:[
+      {sys:"周三 凌晨 12:15 · 非办公时间"},
+      {c:"我的门锁一直响，屏幕显示电量低，现在打不开了，我在门外！！", t:"凌晨 12:15",
+        tk:{type:"售后 · 被锁门外", received:"周三 凌晨 12:15（下班后）", customer:"WhatsApp +65 •••• 9082"}},
+      {b:"抱歉遇到这种情况，先帮您进门。不会一直被锁在外面，有两个办法：\n\n1）充电宝：把充电宝接到门锁外面的应急供电口（线的类型看型号），门锁唤醒后照常用指纹、密码或刷脸开门。\n2）应急钥匙：如果您或家人带着机械钥匙，可以直接开。\n\n您身上有充电宝吗？", t:"凌晨 12:15"},
+      {c:"有，我试试", t:"凌晨 12:16"},
+      {c:"可以了，进来了，谢谢", t:"凌晨 12:19"},
+      {b:"太好了。现在请把室内面板上的电池拆下来，用包装里的线充满，一般要几个小时。\n\n如果充满后还是掉电很快，检查一下电池盖是否盖紧。还不行的话，在这里回复一段短视频，技术同事明天会处理。购买两年内都在上门保修范围内。", t:"凌晨 12:20",
+        tk:{fit:"门锁（型号待确认）", next:"10 点跟进：电池充满后是否正常？若否，请客户发视频 → 安排保修上门", photo:"暂不需要", install:"—", slot:"—", stock:"—", interest:"—", property:"—", postal:"—", zone:"—"}},
+      {sys:"夜间已解决 · 标记早上跟进"}
+    ]},
+    limits: {prio:"需要人工", steps:[
+      {sys:"周四 晚上 10:05 · 非办公时间"},
+      {c:"能再打 85 折吗？明天早上 8 点能装吗？另外是装在办公室，玻璃门。", t:"晚上 10:05",
+        tk:{type:"销售线索 · 商业场所", received:"周四 晚上 10:05（下班后）", customer:"WhatsApp +65 •••• 3310"}},
+      {b:"谢谢您的询问。额外折扣和安装时间需要同事决定，今晚我没法确认。\n\n两点说明：\n• 安装时间一般是周一至周六 9:30–18:00，更早的时段可能要额外收费。\n• 玻璃门、金属门和商业场所需要先评估，可能有额外费用。\n\n麻烦发一张玻璃门的照片和办公室邮编，同事明早 9:30 后会回复您可行的方案。", t:"晚上 10:06",
+        tk:{property:"商业场所（办公室）", fit:"玻璃门 · 非标准", interest:"要求折扣 + 提早安装", stock:"未查（型号待定）", install:"未知 · 需上门评估", slot:"要求：明早 8 点（非安装时段）", next:"销售回复：折扣、玻璃门方案、非工作时间费用"}},
+      {c:"[照片] 408600", t:"晚上 10:08", tk:{photo:"晚上 10:08 已收到 ✓", postal:"408600", zone:"东区 / 中区（40 区）"}},
+      {b:"收到，谢谢。已连同照片转给同事，明早会有人联系您。", t:"晚上 10:08"},
+      {sys:"机器人没有报价、没有承诺时间 · 已转人工"}
+    ]}
+  };
+
+  // ---------- Page text ----------
+  var T = {
+    en: {
+      banner:'<b>Concept prototype by Toni</b> for a Singapore smart-lock retailer, anonymised as SINGXXXX. Not an official channel. Product names and prices are <b>illustrative</b>; stock levels are <b>mock data</b>.',
+      title:'After-Hours Lock Assistant', sub:'What a late-night WhatsApp enquiry could look like, and the handover ticket the team would find at 9:30am.',
+      sc1:'1 · New BTO owner, 11:42pm', sc2:'2 · Existing customer, battery problem', sc3:'3 · What the bot must not promise', replay:'↻ Replay',
+      botName:'Lock Assistant (prototype)', botSub:'Answers 24/7 · hands over to the team during office hours',
+      faqLbl:'Common questions · tap to ask', send:'Send', placeholder:'Ask anything in English or 中文, e.g. budget $1,200 door + gate…',
+      hint:'Offline demo: answers come from a fixed FAQ and product list via keyword matching, and each reply shows its source. The real version uses an AI model reading the same sources.',
+      tAns:'answered by the bot', tHand:'handed to the team', ticketH:'Handover ticket', waiting:'Waiting',
+      stockH:'Stock check · MOCK DATA (to be replaced by the real inventory sheet)', thModel:'Model', thType:'Type', thPrice:'Price*', thUnits:'Units', door:'Door', gate:'Gate',
+      typing:'Assistant is typing…', mock:'mock stock', liveSys:'Live Q&A · tap a common question or type your own', liveType:'Live enquiry (demo)', now:'Now',
+      answered:'✓ Answered by bot · source: ', handed:'→ Handed to team · ', needPerson:'Needs a person', urgent:'After-sales · urgent', mockData:' (mock data)', out:' out',
+      planH:'How I would build it',
+      p1no:'Step 1 · Answer', p1h:'Reply to common questions at night', p1ul:'<li>Knowledge base from the website product list and the FAQ, in English and Chinese</li><li>Covers price, unlock methods, battery, warranty, install time, door/gate fit</li><li>Anything unclear goes to a person the next morning</li>',
+      p2no:'Step 2 · Collect', p2h:'Turn the chat into a ready ticket', p2ul:'<li>Ask property type, door or gate, postal code, preferred day, photo of the door</li><li>Postal code gives the area, so installs can be grouped by area</li><li>Door type gives an install-time estimate (FAQ: wooden door ~2h, metal gate ~1h)</li>',
+      p3no:'Step 3 · Connect', p3h:'Check stock and open slots', p3ul:'<li>Read one shared inventory sheet (Google Sheets or Lark Base)</li><li>Later: read the installers\' calendar to suggest real slots</li><li>Price and install date are always confirmed by a person</li>',
+      qH:'Questions I would need answered first', qOl:'<li>Where is stock tracked today: Shopify, Excel, Lark, or by memory?</li><li>Roughly how many enquiries come in after 6pm, and on which channel?</li><li>Is the company WhatsApp number already on the WhatsApp Business app or API?</li><li>Who picks up the night tickets in the morning, sales or operations?</li><li>Which answers should never be automated (discounts, special doors, commercial sites)?</li>',
+      rH:'Limits and risks, stated upfront', rUl:'<li>Automated WhatsApp replies need the WhatsApp Business Platform through a provider, with business verification. Replies within 24 hours of a customer\'s message are free; the provider charges a monthly fee.</li><li>Customer phone numbers, addresses and door photos are personal data under the PDPA. They stay in the company\'s own sheet and are not sent to the AI model.</li><li>The bot gives guidance, not commitments. A wrong promise costs more than a slow reply.</li>',
+      footer:'* Product names and prices are illustrative, not real quotes. Unit counts are invented for the demo. This page is a scripted simulation, not a live bot.'
+    },
+    zh: {
+      banner:'<b>概念原型，作者 Toni</b>，为一家新加坡智能门锁零售商设计，公司名已匿名为 SINGXXXX，非官方渠道。产品名称和价格为<b>示例</b>，库存为<b>模拟数据</b>。',
+      title:'夜间门锁客服助手', sub:'深夜 WhatsApp 询问的处理过程，以及同事早上 9:30 看到的交接工单。',
+      sc1:'1 · BTO 新房客户，晚上 11:42', sc2:'2 · 老客户，电池没电', sc3:'3 · 机器人不能承诺的事', replay:'↻ 重播',
+      botName:'门锁客服助手（原型）', botSub:'全天回复 · 办公时间交给同事',
+      faqLbl:'常见问题 · 点击提问', send:'发送', placeholder:'用中文或英文提问，例如：门和闸一起装，预算 1200…',
+      hint:'离线演示：回答来自固定的 FAQ 和产品表，用关键词匹配，每条回答都标注来源。正式版由 AI 模型读取同样的资料来回答。',
+      tAns:'机器人已回答', tHand:'已转给同事', ticketH:'交接工单', waiting:'等待中',
+      stockH:'库存查询 · 模拟数据（正式版接真实库存表）', thModel:'型号', thType:'类型', thPrice:'价格*', thUnits:'数量', door:'门锁', gate:'闸锁',
+      typing:'助手正在输入…', mock:'模拟库存', liveSys:'实时问答 · 点击常见问题或自己输入', liveType:'实时询问（演示）', now:'刚刚',
+      answered:'✓ 机器人回答 · 来源：', handed:'→ 转给同事 · ', needPerson:'需要人工', urgent:'售后 · 紧急', mockData:'（模拟数据）', out:' 缺货',
+      planH:'实施思路',
+      p1no:'第 1 步 · 回答', p1h:'夜间自动回答常见问题', p1ul:'<li>用官网产品表和 FAQ 建资料库，中英文都能答</li><li>覆盖价格、开锁方式、电池、保修、安装时长、门闸是否装得下</li><li>不确定的问题，第二天早上交给同事</li>',
+      p2no:'第 2 步 · 收集', p2h:'把对话变成现成的工单', p2ul:'<li>问清房型、门或闸、邮编、方便的日子、门的照片</li><li>邮编对应区域，同一区域的安装可以排在一起</li><li>门型对应预计安装时长（FAQ：木门约 2 小时，铁闸约 1 小时）</li>',
+      p3no:'第 3 步 · 连接', p3h:'查库存和可约时段', p3ul:'<li>读取一张共享库存表（Google Sheets 或 Lark 多维表）</li><li>之后再读取师傅排班，建议真实可约的时段</li><li>价格和安装日期始终由人确认</li>',
+      qH:'需要先确认的问题', qOl:'<li>现在库存记在哪里：Shopify、Excel、Lark，还是靠人记？</li><li>晚上 6 点后大概有多少询问，主要来自哪个渠道？</li><li>公司 WhatsApp 号码现在用的是 Business 应用还是 API？</li><li>夜间工单早上由谁接手，销售还是运营？</li><li>哪些问题绝对不能自动回答（折扣、特殊门、商业场所）？</li>',
+      rH:'限制与风险，先讲清楚', rUl:'<li>WhatsApp 自动回复需要通过服务商接入 WhatsApp Business Platform，并完成商家验证。客户来消息后 24 小时内的回复免费，服务商按月收费。</li><li>客户电话、地址、门的照片属于 PDPA 规定的个人资料，只存在公司自己的表格里，不发给 AI 模型。</li><li>机器人只给建议，不做承诺。答错一次的代价，比回复慢更大。</li>',
+      footer:'* 产品名称和价格为示例，不是真实报价；库存数量为演示虚构。本页是预设脚本的模拟，不是正在运行的机器人。'
+    }
+  };
+  function t(k){ return (T[lang]&&T[lang][k]!=null) ? T[lang][k] : T.en[k]; }
+  var prioState = {en:'Waiting', zh:'等待中', urgent:false};
+  function setPrio(en, zh, urgent){ prioState={en:en, zh:zh, urgent:!!urgent}; prio.textContent = lang==='zh'?zh:en; prio.className='pill'+(urgent?' urgent':''); }
+  function applyLang(){
+    document.documentElement.lang = lang==='zh' ? 'zh' : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n')); });
+    document.getElementById('q').placeholder = t('placeholder');
+    document.querySelectorAll('#langTop button').forEach(function(x){ x.classList.toggle('on', x.dataset.l===lang); });
+    document.title = t('title') + (lang==='zh' ? ' – 原型' : ' – Prototype');
+    relabel(); prio.textContent = lang==='zh'?prioState.zh:prioState.en;
+    renderStock(lastHits); renderChips();
+  }
+
 
   // ---------- Rendering ----------
   var chat=document.getElementById('chat'), ticket=document.getElementById('ticket'), prio=document.getElementById('prio'), stockBody=document.getElementById('stock');
   var timers=[], current='bto';
 
   function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  var lastHits = [];
   function renderTicket(){
-    ticket.innerHTML=FIELDS.map(function(f){return '<div class="row"><div class="k">'+f[1]+'</div><div class="v empty" id="f_'+f[0]+'">—</div></div>';}).join('');
+    ticket.innerHTML=FIELDS.map(function(f){return '<div class="row"><div class="k" id="k_'+f[0]+'">'+(lang==='zh'?f[2]:f[1])+'</div><div class="v empty" id="f_'+f[0]+'">—</div></div>';}).join('');
   }
+  function relabel(){ FIELDS.forEach(function(f){ var el=document.getElementById('k_'+f[0]); if(el) el.textContent = lang==='zh'?f[2]:f[1]; }); }
   function setField(k,v){var el=document.getElementById('f_'+k); if(!el)return; el.textContent=v; el.classList.remove('empty','flash'); void el.offsetWidth; el.classList.add('flash'); if(v==='—')el.classList.add('empty');}
   function renderStock(hits){
-    hits=hits||[];
+    hits=hits||[]; lastHits=hits;
     stockBody.innerHTML=PRODUCTS.map(function(p){
       var u=MOCK_UNITS[p.m]; var hit=hits.indexOf(p.m)>-1;
-      return '<tr'+(hit?' class="hit"':'')+'><td>'+p.m+'</td><td>'+p.type+'</td><td class="n">$'+p.price+'</td><td class="n">'+(u===0?'<b>0</b>':u)+'</td></tr>';
+      return '<tr'+(hit?' class="hit"':'')+'><td>'+p.m+'</td><td>'+(p.type==='Door'?t('door'):t('gate'))+'</td><td class="n">$'+p.price+'</td><td class="n">'+(u===0?'<b>0</b>':u)+'</td></tr>';
     }).join('');
   }
   function add(cls,text,time,mockTag,meta,hand){
     var d=document.createElement('div'); d.className='msg '+cls;
-    d.innerHTML=esc(text)+(mockTag?'<span class="tag">mock stock</span>':'')+(meta?'<span class="meta'+(hand?' hand':'')+'">'+esc(meta)+'</span>':'')+(time?'<span class="time">'+time+'</span>':'');
+    d.innerHTML=esc(text)+(mockTag?'<span class="tag">'+t('mock')+'</span>':'')+(meta?'<span class="meta'+(hand?' hand':'')+'">'+esc(meta)+'</span>':'')+(time?'<span class="time">'+time+'</span>':'');
     chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
   }
   function typing(on){
-    var t=document.getElementById('typing');
-    if(on&&!t){t=document.createElement('div');t.id='typing';t.className='typing';t.textContent='Assistant is typing…';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;}
-    if(!on&&t)t.remove();
+    var ty=document.getElementById('typing');
+    if(on&&!ty){ty=document.createElement('div');ty.id='typing';ty.className='typing';ty.textContent=t('typing');chat.appendChild(ty);chat.scrollTop=chat.scrollHeight;}
+    if(!on&&ty)ty.remove();
   }
   function clearTimers(){timers.forEach(clearTimeout);timers=[];typing(false);}
   function play(name){
     clearTimers(); liveMode=false; current=name; chat.innerHTML=''; renderTicket(); renderStock();
-    var sc=S[name]; prio.textContent='Waiting'; prio.className='pill';
+    var sc=S[name], zs=ZHS[name]; setPrio(T.en.waiting, T.zh.waiting, false);
     var at=300, hadStock=false;
-    sc.steps.forEach(function(st,i){
+    sc.steps.forEach(function(st0,i){
+      var z = lang==='zh' ? (zs.steps[i]||{}) : {};
+      var st = {sys:z.sys||st0.sys, c:z.c||st0.c, b:z.b||st0.b, t:z.t||st0.t, tk:z.tk||st0.tk, stock:st0.stock};
       if(st.b){ (function(a){timers.push(setTimeout(function(){typing(true);},a));})(at); at+=900; }
       (function(st,a){timers.push(setTimeout(function(){
         typing(false);
         if(st.sys) add('sys',st.sys);
         if(st.c) add('cust',st.c,st.t);
-        if(st.b) add('bot',st.b,st.t,hadStock&&/stock/i.test(st.b));
+        if(st.b) add('bot',st.b,st.t,hadStock&&/stock|库存/i.test(st.b));
         if(st.stock){ renderStock(st.stock); hadStock=true; }
         if(st.tk) Object.keys(st.tk).forEach(function(k){setField(k,st.tk[k]);});
-        if(i===sc.steps.length-1){ prio.textContent=sc.prio; prio.className='pill'+(sc.urgent?' urgent':''); }
+        if(i===sc.steps.length-1){ setPrio(sc.prio, zs.prio, sc.urgent); }
       },a));})(st,at);
       at+= st.c ? 1100 : st.b ? 1500 : 600;
     });
@@ -325,7 +389,7 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
 
   // ---------- Live Q&A: FAQ intents (offline keyword matching) ----------
   var ZH_DESC = {"DL-A":"AI 交互门锁，3D 人脸 + 掌静脉，广角摄像头，双电池","DL-B":"超清广角摄像头，3D 人脸 + 掌静脉 + 指纹","DL-C":"内置应急电池，3D 人脸 + 掌静脉 + 指纹","DL-D":"AI 语音控制，3D 人脸 + 掌静脉 + 指纹","DL-E":"入门款木门锁，指纹 / 密码 / 卡 / App，AA 电池","DL-F":"App 用户管理，适合出租房间，指纹 / 密码 / 卡","GL-A":"铁闸锁，3D 人脸 + 视频通话","GL-B":"铁闸外挂锁，3D 人脸 + 指纹，遥控","GL-C":"防水铁闸外挂锁，外置应急钥匙孔"};
-  var lang = 'en', liveMode = false, nAns = 0, nHand = 0;
+  var liveMode = false, nAns = 0, nHand = 0;
   var CHIPS = {
     en: ["Price of DL-A","Door + gate, budget $1,200","How long is installation?","My gate is very close to the door","Battery died, I'm locked out","How long is the warranty?","I lost my access card","Can I get a discount?","Install tomorrow 8am?","It's for my office, glass door"],
     zh: ["DL-A 多少钱？","门和闸一起装，预算 1200","安装要多久？","铁闸离门很近能装吗？","没电了进不去门","保修多久？","门卡丢了怎么办？","可以打折吗？","明早 8 点能装吗？","办公室玻璃门能装吗？"]
@@ -344,45 +408,45 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
 
   // Each intent: test(en lower-case text, original) → reply {en, zh}, src = where the answer comes from, hand = handed to a person
   var INTENTS = [
-    {id:'discount', re:/discount|cheaper|best price|lower price|打折|折扣|便宜|优惠/, hand:'Discount request', src:'Rule: discounts are decided by a person',
+    {id:'discount', re:/discount|cheaper|best price|lower price|打折|折扣|便宜|优惠/, hand:'Discount request', hand_zh:'折扣请求', src:'Rule: discounts are decided by a person', src_zh:'规则：折扣由人决定',
       say:{en:"I can't offer extra discounts, our team decides those. I've passed your request on. "+NEXT.en, zh:'额外折扣需要同事决定，我不能直接答应。已经帮您转给同事，'+NEXT.zh}},
-    {id:'commercial', re:/office|commercial|glass|shop|company|办公室|公司|玻璃|商铺|店面/, hand:'Commercial / non-standard door', src:'FAQ: special doors and sites',
+    {id:'commercial', re:/office|commercial|glass|shop|company|办公室|公司|玻璃|商铺|店面/, hand:'Commercial / non-standard door', hand_zh:'商业场所 / 非标准门', src:'FAQ: special doors and sites', src_zh:'FAQ：特殊门与场所',
       say:{en:'Glass doors, metal doors and commercial sites need a check first, and there may be extra charges. Could you send a photo of the door and the postal code? '+NEXT.en, zh:'玻璃门、金属门和商业场所需要先评估，可能有额外费用。麻烦发一张门的照片和邮编，'+NEXT.zh}},
-    {id:'early', re:/tomorrow|tonight|\b[5-8] ?am\b|early|urgent install|明早|明天|今晚|早上[5-8]|[5-8] ?点/, hand:'Install time request', src:'FAQ: installation hours',
+    {id:'early', re:/tomorrow|tonight|\b[5-8] ?am\b|early|urgent install|明早|明天|今晚|早上[5-8]|[5-8] ?点/, hand:'Install time request', hand_zh:'安装时间请求', src:'FAQ: installation hours', src_zh:'FAQ：安装时段',
       say:{en:'Installations normally run Mon–Sat, 9:30am–6pm, and dates depend on available slots. I can\'t confirm a time tonight, but I\'ve noted your preferred time. '+NEXT.en, zh:'安装时间一般是周一至周六 9:30–18:00，具体看档期。今晚没法确认时间，已记下您希望的时段，'+NEXT.zh}},
-    {id:'locked', re:/locked out|can'?t (get in|open)|battery (died|dead|flat|low)|进不去|打不开|没电/, hand:'After-sales follow-up', urgent:true, src:'FAQ: battery and emergency access',
+    {id:'locked', re:/locked out|can'?t (get in|open)|battery (died|dead|flat|low)|进不去|打不开|没电/, hand:'After-sales follow-up', hand_zh:'售后跟进', urgent:true, src:'FAQ: battery and emergency access', src_zh:'FAQ：电池与应急开锁',
       say:{en:'You won\'t be locked out for good. Connect a power bank to the lock\'s external emergency power port to wake it up, then unlock as usual; or use the mechanical key. Once inside, charge the battery pack fully. If it still drains fast, send us a short video. '+NEXT.en, zh:'不会一直被锁在门外。用充电宝接门锁外面的应急供电口，唤醒后正常开锁；或者用机械钥匙。进门后把电池充满。如果还是很快没电，请发一段短视频给我们，'+NEXT.zh}},
-    {id:'product', test:function(s,q){return !!findProduct(q);}, src:'Product list + stock sheet', product:true},
-    {id:'budget', test:function(s,q){return budgetOf(q)!==null && /budget|under|within|below|预算|以内|以下|左右|\$/.test(s);}, src:'Product list: bundles within budget', budget:true},
-    {id:'gap', re:/gap|close to|too close|space|fit|间距|距离|很近|太近|装得下/, src:'FAQ: door and gate spacing',
+    {id:'product', test:function(s,q){return !!findProduct(q);}, src:'Product list + stock sheet', src_zh:'产品表 + 库存表', product:true},
+    {id:'budget', test:function(s,q){return budgetOf(q)!==null && /budget|under|within|below|预算|以内|以下|左右|\$/.test(s);}, src:'Product list: bundles within budget', src_zh:'产品表：预算内套装', budget:true},
+    {id:'gap', re:/gap|close to|too close|space|fit|间距|距离|很近|太近|装得下/, src:'FAQ: door and gate spacing', src_zh:'FAQ：门闸间距',
       say:{en:'Usually fine. About 6cm is needed between the door and the gate, depending on which way the handles face. A photo from the corridor helps us confirm.', zh:'一般没问题。门和闸之间大约需要 6 厘米，具体看把手方向。从走廊拍一张门和闸的照片，我们可以帮您确认。'}},
-    {id:'bundle', re:/bundle|door.*gate|gate.*door|both|套装|门和闸|闸和门|一起装/, src:'Product list: bundles',
+    {id:'bundle', re:/bundle|door.*gate|gate.*door|both|套装|门和闸|闸和门|一起装/, src:'Product list: bundles', src_zh:'产品表：套装',
       say:{en:'Door + gate bundles (illustrative prices):\n'+BUNDLES.map(function(b){return '• '+b.name+' – $'+b.price.toLocaleString('en-US');}).join('\n')+'\nTell me your budget, door type and postal code and I\'ll shortlist.', zh:'门锁 + 闸锁套装（示例价格）：\n'+BUNDLES.map(function(b){return '• '+b.name+' – $'+b.price.toLocaleString('en-US');}).join('\n')+'\n告诉我预算、门的类型和邮编，我帮您缩小范围。'}},
-    {id:'installtime', re:/how long.*install|install.*how long|install time|duration|安装.*多久|多长时间|要多久/, src:'FAQ: installation time',
+    {id:'installtime', re:/how long.*install|install.*how long|install time|duration|安装.*多久|多长时间|要多久/, src:'FAQ: installation time', src_zh:'FAQ：安装时长',
       say:{en:'About 2 hours for a wooden door lock and about 1 hour for a metal gate lock. Installations run Mon–Sat, 9:30am–6pm.', zh:'木门锁大约 2 小时，铁闸锁大约 1 小时。安装时间是周一至周六 9:30–18:00。'}},
-    {id:'warranty', re:/warrant|guarantee|保修|质保/, src:'FAQ: warranty',
+    {id:'warranty', re:/warrant|guarantee|保修|质保/, src:'FAQ: warranty', src_zh:'FAQ：保修',
       say:{en:'2-year local on-site warranty covering functional defects (parts and labour). Cosmetic wear and misuse are not covered.', zh:'2 年本地上门保修，涵盖功能故障（零件和人工）。外观磨损和使用不当不在保修范围内。'}},
-    {id:'card', re:/lost.*card|card.*lost|lost.*tag|卡丢|门卡|丢了.*卡/, src:'FAQ: lost access card',
+    {id:'card', re:/lost.*card|card.*lost|lost.*tag|卡丢|门卡|丢了.*卡/, src:'FAQ: lost access card', src_zh:'FAQ：门卡丢失',
       say:{en:'No problem. Open the admin menu on the lock and delete that user ID, and the card stops working at once. Tip: write the user ID on each card when you set it up.', zh:'不用担心。在门锁的管理菜单里删除这张卡对应的用户编号，卡就立即失效了。小建议：设置时把用户编号写在卡上。'}},
-    {id:'finger', re:/fingerprint|指纹/, src:'FAQ: fingerprint troubleshooting',
+    {id:'finger', re:/fingerprint|指纹/, src:'FAQ: fingerprint troubleshooting', src_zh:'FAQ：指纹识别问题',
       say:{en:'Fingerprint reading can be affected by moisture, oil or angle. Wipe the finger and sensor, register the same finger at a few angles, and add a backup finger.', zh:'指纹识别会受潮湿、油污和角度影响。擦干手指和感应区，同一根手指多录几个角度，再加录一根备用手指。'}},
-    {id:'battery', re:/batter|charge|电池|充电|续航/, src:'FAQ: battery',
+    {id:'battery', re:/batter|charge|电池|充电|续航/, src:'FAQ: battery', src_zh:'FAQ：电池',
       say:{en:'Most models use a rechargeable lithium battery that lasts a few months depending on use, with a low-battery alert. If it runs flat, a power bank on the emergency port wakes the lock up.', zh:'多数型号用可充电锂电池，按使用频率一般能用几个月，没电前会提醒。万一没电，用充电宝接应急供电口就能唤醒。'}},
-    {id:'rain', re:/rain|water|weather|下雨|防水|淋雨/, src:'FAQ: water resistance',
+    {id:'rain', re:/rain|water|weather|下雨|防水|淋雨/, src:'FAQ: water resistance', src_zh:'FAQ：防水',
       say:{en:'Yes, the locks are water-resistant for daily use and light rain at a typical entrance. For an exposed gate, the weatherproof gate model GL-C is the better fit.', zh:'可以，门锁有日常防水，挡得住一般走廊的小雨。如果铁闸完全露天，建议选防水款 GL-C。'}},
-    {id:'forgot', re:/forg[eo]t to lock|left.*unlock|忘记锁|没锁/, src:'FAQ: auto-lock',
+    {id:'forgot', re:/forg[eo]t to lock|left.*unlock|忘记锁|没锁/, src:'FAQ: auto-lock', src_zh:'FAQ：自动上锁',
       say:{en:'The handle stays locked unless someone is verified by fingerprint, PIN, card or app, so the door can\'t simply be opened from outside.', zh:'没有验证指纹、密码、门卡或 App 时，外面的把手是锁住的，别人不能直接开门。'}},
-    {id:'app', re:/\bapp\b|wifi|wi-fi|remote|phone|手机|远程/, src:'Product list: app features',
+    {id:'app', re:/\bapp\b|wifi|wi-fi|remote|phone|手机|远程/, src:'Product list: app features', src_zh:'产品表：App 功能',
       say:{en:'Most models support remote unlocking and live view through the app. Note the app needs a 2.4GHz Wi-Fi connection.', zh:'多数型号支持 App 远程开锁和实时查看。注意 App 需要连接 2.4GHz 的 Wi-Fi。'}},
-    {id:'payment', re:/deposit|reserve|pay|payment|定金|付款|订金|分期/, src:'FAQ: deposit and payment',
+    {id:'payment', re:/deposit|reserve|pay|payment|定金|付款|订金|分期/, src:'FAQ: deposit and payment', src_zh:'FAQ：定金与付款',
       say:{en:'You can reserve a lock or a promo deal with a $100 deposit per lock. Paying after installation can be arranged on request, subject to terms.', zh:'可以付 $100 定金（每把锁）锁定型号或优惠。装完再付款也可以申请，需按条款确认。'}},
-    {id:'tripfee', re:/not (at )?home|miss.*appointment|reschedul|不在家|改期|错过/, src:'FAQ: trip charge',
+    {id:'tripfee', re:/not (at )?home|miss.*appointment|reschedul|不在家|改期|错过/, src:'FAQ: trip charge', src_zh:'FAQ：空跑费',
       say:{en:'Please be home at the agreed time. If the installation can\'t go ahead because no one is there, a $50 trip charge applies. To reschedule, just tell us in advance.', zh:'请在约定时间在家。如果因为没人在家无法安装，会收 $50 空跑费。需要改期请提前告诉我们。'}},
-    {id:'showroom', re:/showroom|visit|address|where are you|展厅|门店|地址|看实物/, src:'Contact page',
+    {id:'showroom', re:/showroom|visit|address|where are you|展厅|门店|地址|看实物/, src:'Contact page', src_zh:'联系页面',
       say:{en:'We have two showrooms, one in the east and one in the west. I\'ll ask a colleague to send the address and opening hours.', zh:'我们东区和西区各有一个展厅。我请同事把地址和营业时间发给您。'}},
-    {id:'face', re:/face|palm|facial|人脸|刷脸|掌静脉/, src:'Product list: face recognition models',
+    {id:'face', re:/face|palm|facial|人脸|刷脸|掌静脉/, src:'Product list: face recognition models', src_zh:'产品表：人脸识别款',
       say:{en:'Face recognition door locks: DL-A ($880), DL-B ($800), DL-C ($780), DL-D ($760). For the gate: GL-A ($660) or GL-B ($700). Prices are illustrative.', zh:'带人脸识别的门锁：DL-A（$880）、DL-B（$800）、DL-C（$780）、DL-D（$760）。铁闸可选 GL-A（$660）或 GL-B（$700）。价格为示例。'}},
-    {id:'price', re:/price|cost|how much|多少钱|价格|价钱/, src:'Product list: price range',
+    {id:'price', re:/price|cost|how much|多少钱|价格|价钱/, src:'Product list: price range', src_zh:'产品表：价格区间',
       say:{en:'Single locks range from $500 (DL-F) to $880 (DL-A), and door + gate bundles from $900 to $1,200 (illustrative prices). Tell me your budget and I\'ll shortlist.', zh:'单把锁从 $500（DL-F）到 $880（DL-A），门锁 + 闸锁套装从 $900 到 $1,200（示例价格）。告诉我预算，我帮您挑。'}}
   ];
   function reply(q){
@@ -402,59 +466,67 @@ footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);fon
         if(!fit.length) return {it:it, text: zh ? '预算 '+fmt(b)+' 以内暂时没有门锁 + 闸锁套装，单把锁最低 $500（DL-F）。要不要先看单锁？' : 'There\'s no door + gate bundle within '+fmt(b)+'; single locks start at $500 (DL-F). Shall I list single locks?'};
         var list=fit.map(function(x){return '• '+x.name+' – '+fmt(x.price)+(outOf(x.name)?(zh?'（暂时缺货）':' (out of stock)'):'');}).join('\n');
         var ids=[]; fit.forEach(function(x){x.name.split(' + ').forEach(function(m){if(ids.indexOf(m)<0)ids.push(m);});});
-        return {it:it, stock:ids, tk:{interest:'Bundle within '+fmt(b)+': '+fit.map(function(x){return x.name;}).join(', ')}, text: zh
+        return {it:it, stock:ids, tk:{interest:(lang==='zh'?'预算 '+fmt(b)+' 以内套装：':'Bundle within '+fmt(b)+': ')+fit.map(function(x){return x.name;}).join(', ')}, text: zh
           ? '预算 '+fmt(b)+' 以内的门锁 + 闸锁套装（示例价格）：\n'+list+'\n是木门加铁闸吗？方便的话发一下邮编和门的照片，我帮同事先准备好。'
           : 'Door + gate bundles within '+fmt(b)+' (illustrative prices):\n'+list+'\nIs it a wooden door with a metal gate? Send your postal code and a photo and I\'ll prepare it for the team.'};
       }
       return {it:it, text: zh ? it.say.zh : it.say.en};
     }
-    return {it:{id:'unknown', hand:'Question not in FAQ', src:'Not found in FAQ'}, text: zh ? '这个问题我还不确定，已经记下来转给同事，'+NEXT.zh : 'I\'m not sure about that one, so I\'ve noted it for the team. '+NEXT.en};
+    return {it:{id:'unknown', hand:'Question not in FAQ', hand_zh:'FAQ 未覆盖的问题', src:'Not found in FAQ', src_zh:'FAQ 中未找到'}, text: zh ? '这个问题我还不确定，已经记下来转给同事，'+NEXT.zh : 'I\'m not sure about that one, so I\'ve noted it for the team. '+NEXT.en};
   }
   function updateTally(){ document.getElementById('nAns').textContent=nAns; document.getElementById('nHand').textContent=nHand; }
   function startLive(){
     if(liveMode) return; liveMode=true; chat.innerHTML=''; renderTicket(); renderStock();
-    add('sys','Live Q&A · tap a common question or type your own');
-    setField('type','Live enquiry (demo)'); setField('received','Now');
-    prio.textContent='Waiting'; prio.className='pill';
+    add('sys', t('liveSys'));
+    setField('type', t('liveType')); setField('received', t('now'));
+    setPrio(T.en.waiting, T.zh.waiting, false);
     document.querySelectorAll('#scen button[data-s]').forEach(function(x){x.classList.remove('on');});
   }
   function ask(q){
     q=String(q||'').trim(); if(!q) return;
-    clearTimers(); startLive(); add('cust',q,'now');
+    clearTimers(); startLive(); add('cust',q,t('now'));
     var r=reply(q);
     typing(true);
     timers.push(setTimeout(function(){
       typing(false);
       if(r.stock) renderStock(r.stock);
-      var zh=isZh(q), meta;
+      var meta, zhUI = lang==='zh';
       if(r.it.hand){
-        nHand++; meta='→ Handed to team · '+r.it.hand;
-        setField('next', r.it.hand+': "'+q+'"'); setField('interest', r.tk&&r.tk.interest ? r.tk.interest : (document.getElementById('f_interest').textContent));
-        prio.textContent = r.it.urgent ? 'After-sales · urgent' : 'Needs a person'; prio.className='pill'+(r.it.urgent?' urgent':'');
+        nHand++; var why = zhUI ? (r.it.hand_zh||r.it.hand) : r.it.hand;
+        meta = t('handed') + why;
+        setField('next', why+(zhUI?'：“':': "')+q+(zhUI?'”':'"'));
+        if(r.tk&&r.tk.interest) setField('interest', r.tk.interest);
+        if(r.it.urgent) setPrio(T.en.urgent, T.zh.urgent, true); else setPrio(T.en.needPerson, T.zh.needPerson, false);
       } else {
-        nAns++; meta='✓ Answered by bot · source: '+r.it.src;
+        nAns++; meta = t('answered') + (zhUI ? (r.it.src_zh||r.it.src) : r.it.src);
         if(r.tk) Object.keys(r.tk).forEach(function(k){setField(k,r.tk[k]);});
-        if(r.stock) setField('stock', r.stock.map(function(m){return m+(MOCK_UNITS[m]>0?' ✓':' out');}).join(' · ')+' (mock data)');
+        if(r.stock) setField('stock', r.stock.map(function(m){return m+(MOCK_UNITS[m]>0?' ✓':t('out'));}).join(' · ')+t('mockData'));
       }
-      add('bot', r.text, 'now', !!r.stock, meta, !!r.it.hand);
+      add('bot', r.text, t('now'), !!r.stock, meta, !!r.it.hand);
       updateTally();
     },700));
   }
   function send(){ var inp=document.getElementById('q'); ask(inp.value); inp.value=''; }
   function renderChips(){
     var box=document.getElementById('chips'); box.innerHTML='';
-    CHIPS[lang].forEach(function(t){ var b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=function(){ask(t);}; box.appendChild(b); });
+    CHIPS[lang].forEach(function(txt){ var b=document.createElement('button'); b.type='button'; b.textContent=txt; b.onclick=function(){ask(txt);}; box.appendChild(b); });
   }
-  document.querySelectorAll('.lang button').forEach(function(b){
-    b.onclick=function(){ lang=b.dataset.l; document.querySelectorAll('.lang button').forEach(function(x){x.classList.toggle('on',x===b);}); renderChips(); };
-  });
-  renderChips();
+  function setLang(l){
+    if(l===lang) return; lang=l; applyLang();
+    try{ history.replaceState(null,'', l==='zh' ? '?lang=zh' : location.pathname); }catch(e){}
+    if(!liveMode){
+      document.querySelectorAll('#scen button[data-s]').forEach(function(x){x.classList.toggle('on', x.dataset.s===current);});
+      play(current);
+    }
+  }
+  document.querySelectorAll('#langTop button').forEach(function(b){ b.onclick=function(){ setLang(b.dataset.l); }; });
   document.getElementById('send').onclick=send;
   document.getElementById('q').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
   document.querySelectorAll('#scen button[data-s]').forEach(function(b){
     b.onclick=function(){document.querySelectorAll('#scen button[data-s]').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); play(b.dataset.s);};
   });
-  document.getElementById('replay').onclick=function(){play(current);};
+  document.getElementById('replay').onclick=function(){ document.querySelectorAll('#scen button[data-s]').forEach(function(x){x.classList.toggle('on', x.dataset.s===current);}); play(current);};
+  renderTicket(); applyLang();
   play('bto');
 })();
 </script>
