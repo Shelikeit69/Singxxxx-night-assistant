@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>After-Hours Lock Assistant – Prototype</title>
+<style>
+:root{
+  --bg:#f4f2ee; --panel:#ffffff; --ink:#1d2328; --muted:#66707a; --line:#e2ded6;
+  --accent:#0f6b5c; --accent-soft:#e3f1ee; --bot:#ffffff; --me:#d9f0e6;
+  --warn:#9a5b00; --warn-soft:#fff3dc; --chatbg:#ece7df; --mock:#7a3fa0; --mock-soft:#f3e9fa;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15191c; --panel:#1e2428; --ink:#e7eaec; --muted:#9aa4ad; --line:#30383e;
+    --accent:#4fbfa8; --accent-soft:#18332e; --bot:#262d32; --me:#1d4038;
+    --warn:#f0b450; --warn-soft:#3a2d14; --chatbg:#11161a; --mock:#c99be8; --mock-soft:#2c2036;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.banner{background:var(--warn-soft);color:var(--warn);border-bottom:1px solid var(--line);padding:10px 16px;font-size:13px;text-align:center}
+.banner b{font-weight:700}
+header{max-width:1180px;margin:0 auto;padding:22px 16px 6px}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0}
+.scen{max-width:1180px;margin:14px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap}
+.scen button{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:999px;cursor:pointer;font-size:14px}
+.scen button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid{max-width:1180px;margin:14px auto;padding:0 16px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.phone-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.phone-head .t{font-weight:600}
+.phone-head .s{font-size:12px;color:var(--muted)}
+.chat{background:var(--chatbg);height:520px;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;padding:8px 11px;border-radius:12px;white-space:pre-wrap;word-wrap:break-word;box-shadow:0 1px 0 rgba(0,0,0,.06);font-size:14.5px}
+.msg.cust{align-self:flex-end;background:var(--me);border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--bot);border-bottom-left-radius:4px}
+.msg.sys{align-self:center;background:transparent;color:var(--muted);font-size:12px;box-shadow:none;padding:2px}
+.msg .time{display:block;text-align:right;font-size:11px;color:var(--muted);margin-top:3px}
+.msg .tag{display:inline-block;font-size:11px;font-weight:600;color:var(--mock);background:var(--mock-soft);border-radius:4px;padding:0 5px;margin-left:4px}
+.typing{align-self:flex-start;background:var(--bot);padding:8px 12px;border-radius:12px;color:var(--muted);font-size:13px}
+.inputbar{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.inputbar input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:9px 14px;font-size:14px}
+.inputbar button{border:0;background:var(--accent);color:#fff;border-radius:999px;padding:0 16px;font-weight:600;cursor:pointer}
+.hint{font-size:12px;color:var(--muted);padding:0 12px 10px}
+.side h2{font-size:15px;margin:0;padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.pill{font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--accent-soft);color:var(--accent)}
+.pill.urgent{background:var(--warn-soft);color:var(--warn)}
+.ticket{padding:4px 14px 14px}
+.row{display:grid;grid-template-columns:132px 1fr;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.row:last-child{border-bottom:0}
+.row .k{color:var(--muted)}
+.row .v.empty{color:var(--muted);font-style:italic}
+.row .v.flash{animation:fl 1.2s ease}
+@keyframes fl{0%{background:var(--accent-soft)}100%{background:transparent}}
+.stock{margin:0 14px 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stock .h{font-size:12.5px;font-weight:600;padding:8px 10px;background:var(--mock-soft);color:var(--mock)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:6px 10px;text-align:left;border-top:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.hit td{background:var(--accent-soft)}
+section.wide{max-width:1180px;margin:0 auto 16px;padding:0 16px}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.phase{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.phase .no{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.phase h3{margin:4px 0 6px;font-size:16px}
+.phase p,.phase li{font-size:13.5px;color:var(--muted);margin:0}
+.phase ul{padding-left:18px;margin:6px 0 0}
+h2.sec{font-size:18px;margin:22px 0 10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13.5px}
+.box ol,.box ul{margin:6px 0 0;padding-left:20px}
+.box li{margin:3px 0}
+footer{max-width:1180px;margin:0 auto 30px;padding:0 16px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="banner"><b>Concept prototype by Toni Zhang</b> for a Singapore smart-lock retailer, anonymised as SINGXXXX. Not an official channel. Product names and prices are <b>illustrative</b>; stock levels are <b>mock data</b>.</div>
+
+<header>
+  <h1>After-Hours Lock Assistant</h1>
+  <p class="sub">What a late-night WhatsApp enquiry could look like, and the handover ticket the team would find at 9:30am.</p>
+</header>
+
+<div class="scen" id="scen">
+  <button data-s="bto" class="on">1 · New BTO owner, 11:42pm</button>
+  <button data-s="battery">2 · Existing customer, battery problem</button>
+  <button data-s="limits">3 · What the bot must not promise</button>
+  <button id="replay" style="margin-left:auto">↻ Replay</button>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="phone-head">
+      <div class="avatar">SX</div>
+      <div><div class="t">Lock Assistant (prototype)</div><div class="s">Answers 24/7 · hands over to the team during office hours</div></div>
+    </div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <div class="inputbar">
+      <input id="q" placeholder="Try: price of DL-A, battery life, install time, gap between door and gate…" autocomplete="off">
+      <button id="send">Send</button>
+    </div>
+    <div class="hint">Free typing uses simple keyword matching on the website FAQ and product list. The real version would use an AI model reading the same sources.</div>
+  </div>
+
+  <div class="card side">
+    <h2>Handover ticket <span class="pill" id="prio">Waiting</span></h2>
+    <div class="ticket" id="ticket"></div>
+    <div class="stock">
+      <div class="h">Stock check · MOCK DATA (to be replaced by the real inventory sheet)</div>
+      <table>
+        <thead><tr><th>Model</th><th>Type</th><th class="n">Price*</th><th class="n">Units</th></tr></thead>
+        <tbody id="stock"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<section class="wide">
+  <h2 class="sec">How I would build it</h2>
+  <div class="cols">
+    <div class="phase">
+      <div class="no">Step 1 · Answer</div>
+      <h3>Reply to common questions at night</h3>
+      <ul>
+        <li>Knowledge base from the website product list and the FAQ, in English and Chinese</li>
+        <li>Covers price, unlock methods, battery, warranty, install time, door/gate fit</li>
+        <li>Anything unclear goes to a person the next morning</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="no">Step 2 · Collect</div>
+      <h3>Turn the chat into a ready ticket</h3>
+      <ul>
+        <li>Ask property type, door or gate, postal code, preferred day, photo of the door</li>
+        <li>Postal code gives the area, so installs can be grouped by area</li>
+        <li>Door type gives an install-time estimate (FAQ: wooden door ~2h, metal gate ~1h)</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="no">Step 3 · Connect</div>
+      <h3>Check stock and open slots</h3>
+      <ul>
+        <li>Read one shared inventory sheet (Google Sheets or Lark Base)</li>
+        <li>Later: read the installers' calendar to suggest real slots</li>
+        <li>Price and install date are always confirmed by a person</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two" style="margin-top:12px">
+    <div class="box">
+      <b>Questions I would need answered first</b>
+      <ol>
+        <li>Where is stock tracked today: Shopify, Excel, Lark, or by memory?</li>
+        <li>Roughly how many enquiries come in after 6pm, and on which channel?</li>
+        <li>Is the company WhatsApp number already on the WhatsApp Business app or API?</li>
+        <li>Who picks up the night tickets in the morning, sales or operations?</li>
+        <li>Which answers should never be automated (discounts, special doors, commercial sites)?</li>
+      </ol>
+    </div>
+    <div class="box">
+      <b>Limits and risks, stated upfront</b>
+      <ul>
+        <li>Automated WhatsApp replies need the WhatsApp Business Platform through a provider, with business verification and per-conversation costs. To be assessed before committing.</li>
+        <li>Customer phone numbers, addresses and door photos are personal data under the PDPA. Access and storage need to be decided.</li>
+        <li>The bot gives guidance, not commitments. A wrong promise costs more than a slow reply.</li>
+        <li>The website has a few inconsistent figures (e.g. install time 60–90 min vs 1–2 h; battery 2–3 vs 3–4 months). These should be settled before the bot quotes them.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>* Product names and prices are illustrative, not real quotes. Unit counts are invented for the demo. This page is a scripted simulation, not a live bot.</footer>
+
+<script>
+(function(){
+  // ---------- Illustrative product data (anonymised) ----------
+  var PRODUCTS = [
+    {m:"DL-A", type:"Door", price:880, desc:"AI interaction lock, 3D face + palm vein, wide-angle camera, dual battery"},
+    {m:"DL-B", type:"Door", price:800, desc:"Ultra-HD wide-angle camera, 3D face + palm vein + fingerprint"},
+    {m:"DL-C", type:"Door", price:780, desc:"Built-in emergency battery, 3D face + palm vein + fingerprint"},
+    {m:"DL-D", type:"Door", price:760, desc:"AI voice control, 3D face + palm vein + fingerprint"},
+    {m:"DL-E", type:"Door", price:550, desc:"Budget wooden-door lock, fingerprint/PIN/RFID/app, AA batteries"},
+    {m:"DL-F", type:"Door", price:500, desc:"App user management, good for rental rooms, fingerprint/PIN/RFID"},
+    {m:"GL-A", type:"Gate", price:660, desc:"Metal gate lock, 3D face + video calling"},
+    {m:"GL-B", type:"Gate", price:700, desc:"Metal gate rim lock, 3D face + fingerprint, remote control"},
+    {m:"GL-C", type:"Gate", price:650, desc:"Weatherproof metal gate rim lock, external emergency key slot"}
+  ];
+  var BUNDLES = [
+    {name:"DL-A + GL-A", price:1200},
+    {name:"DL-A + GL-B", price:1200},
+    {name:"DL-B + GL-A", price:1150},
+    {name:"DL-B + GL-B", price:1050},
+    {name:"DL-C + GL-A", price:1100},
+    {name:"DL-C + GL-B", price:1000},
+    {name:"DL-G + GL-A", price:980},
+    {name:"DL-E + GL-A", price:900}
+  ];
+  // MOCK stock counts, invented for the demo
+  var MOCK_UNITS = {"DL-A":6,"DL-B":0,"DL-C":4,"DL-D":3,"DL-E":9,"DL-F":5,"GL-A":7,"GL-B":2,"GL-C":8};
+
+  var FIELDS = [
+    ["type","Ticket type"],["received","Received"],["customer","Customer"],["property","Property"],
+    ["fit","Door / gate"],["postal","Postal code"],["zone","Area (approx.)"],["interest","Interested in"],
+    ["stock","Stock check"],["install","Est. install time"],["slot","Preferred slot"],["photo","Door photo"],
+    ["next","Next action (9:30am)"]
+  ];
+
+  // ---------- Scripted scenarios ----------
+  var S = {
+    bto: {prio:"Sales lead", urgent:false, steps:[
+      {sys:"Tue 11:42 pm · outside office hours"},
+      {c:"Hi, just collected my BTO keys. Want a lock for main door + gate, prefer face unlock. Budget around 1.2k. Got stock?", t:"11:42 pm",
+        tk:{type:"Sales lead · new home", received:"Tue 11:42 pm (after hours)", customer:"WhatsApp +65 •••• 4471"}},
+      {b:"Hi! Congrats on your new home 🏠 I'm the after-hours assistant. I can share options now, and our team will confirm everything tomorrow from 9:30am.\n\nWithin about $1,200 with face unlock on both door and gate, these bundles fit:\n• DL-A + GL-A – $1,200 (AI lock, 3D face + palm vein, camera)\n• DL-B + GL-A – $1,150 (Ultra-HD wide-angle camera)\n• DL-C + GL-A – $1,100 (built-in emergency battery)\n\nIs your main door the standard wooden HDB door, and is the gate a metal gate?", t:"11:42 pm",
+        tk:{property:"HDB BTO", interest:"Door + gate bundle, face unlock, budget ~$1,200"}},
+      {c:"Yes wooden door, metal gate. The gate is quite close to the door, will it fit?", t:"11:44 pm"},
+      {b:"Usually yes. Our guide says only about 6cm is needed between door and gate, depending on which way the handles face.\n\nTo be sure, could you send one photo of the door and gate together, from the corridor?", t:"11:44 pm",
+        tk:{fit:"Wooden door + metal gate · gap to be checked"}},
+      {c:"[photo]", t:"11:46 pm", tk:{photo:"Received 11:46 pm ✓"}},
+      {b:"Thanks, got it. Two last questions so our team can plan the installation:\n1) Your postal code?\n2) Which days suit you? Installations run Mon–Sat, 9:30am–6pm.", t:"11:46 pm"},
+      {c:"520123. Saturday morning best", t:"11:47 pm",
+        tk:{postal:"520123", zone:"East (sector 52)", slot:"Sat, morning", install:"~3 h (FAQ: wooden door ~2 h + metal gate ~1 h)"}},
+      {stock:["DL-A","DL-B","GL-A"]},
+      {b:"Quick stock note: DL-A and GL-A are available. DL-B is out of stock right now, so DL-A + GL-A ($1,200) is the one I'd suggest.\n\nI've passed everything to our team. A colleague will WhatsApp you tomorrow after 9:30am to confirm the price and a Saturday slot. Nothing is booked yet, and no payment is needed tonight.", t:"11:47 pm",
+        tk:{stock:"DL-A ✓ · GL-A ✓ · DL-B out (mock data)", interest:"DL-A + GL-A bundle ($1,200) · alt: DL-C + GL-A", next:"Confirm price + Sat AM slot; group with other East installs that day"}},
+      {c:"Ok thanks!", t:"11:48 pm"},
+      {sys:"Ticket saved · waiting for the morning team"}
+    ]},
+    battery: {prio:"After-sales · urgent", urgent:true, steps:[
+      {sys:"Wed 12:15 am · outside office hours"},
+      {c:"My door lock keeps beeping and the screen says low battery. Now it won't open. I'm outside!!", t:"12:15 am",
+        tk:{type:"After-sales · locked out", received:"Wed 12:15 am (after hours)", customer:"WhatsApp +65 •••• 9082"}},
+      {b:"Sorry about this, let's get you in first. You won't be locked out permanently. Two ways:\n\n1) Power bank: connect a power bank to the external emergency power port on the lock (the cable type depends on the model). The lock wakes up, then use your fingerprint, PIN or face as usual.\n2) Emergency key: use the mechanical key if it's with you or a family member.\n\nDo you have a power bank with you?", t:"12:15 am"},
+      {c:"Yes ok trying", t:"12:16 am"},
+      {c:"It worked, I'm inside. Thanks", t:"12:19 am"},
+      {b:"Great. Now please take the battery pack off the inside panel and charge it fully with the cable from the box. It usually takes a few hours.\n\nIf it still drains fast after a full charge, check the battery cover is fully closed. If that doesn't help, reply here with a short video and our technical team will check it tomorrow. Your lock is under the 2-year on-site warranty if it was bought within that period.", t:"12:20 am",
+        tk:{fit:"Door lock (model to confirm)", next:"Follow up 10am: did battery charge hold? If not, ask for video → arrange on-site check under warranty", photo:"Not needed yet", install:"—", slot:"—", stock:"—", interest:"—", property:"—", postal:"—", zone:"—"}},
+      {sys:"Resolved at night · flagged for morning follow-up"}
+    ]},
+    limits: {prio:"Needs a person", urgent:false, steps:[
+      {sys:"Thu 10:05 pm · outside office hours"},
+      {c:"Can you give me extra 15% off and install tomorrow 8am? Also it's for my office, glass door.", t:"10:05 pm",
+        tk:{type:"Sales lead · commercial", received:"Thu 10:05 pm (after hours)", customer:"WhatsApp +65 •••• 3310"}},
+      {b:"Thanks for asking. I can't confirm extra discounts or install times tonight, our team decides those.\n\nTwo things to note from our guide:\n• Installations normally run Mon–Sat, 9:30am–6pm. Earlier times may cost extra.\n• Glass doors, metal doors and commercial sites need a check first, and there may be extra charges.\n\nCould you send a photo of the glass door and your office postal code? A colleague will reply tomorrow after 9:30am with what's possible.", t:"10:06 pm",
+        tk:{property:"Commercial (office)", fit:"Glass door · non-standard", interest:"Discount + early install requested", stock:"Not checked (model TBC)", install:"Unknown · needs site check", slot:"Asked: tomorrow 8am (outside hours)", next:"Sales to reply: discount, glass-door option, out-of-hours fee"}},
+      {c:"[photo] 408600", t:"10:08 pm", tk:{photo:"Received 10:08 pm ✓", postal:"408600", zone:"East / Central (sector 40)"}},
+      {b:"Received, thank you. I've passed this to our team with your photo. You'll hear from us tomorrow morning.", t:"10:08 pm"},
+      {sys:"Bot did not quote price or time · escalated"}
+    ]}
+  };
+
+  // ---------- Rendering ----------
+  var chat=document.getElementById('chat'), ticket=document.getElementById('ticket'), prio=document.getElementById('prio'), stockBody=document.getElementById('stock');
+  var timers=[], current='bto';
+
+  function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function renderTicket(){
+    ticket.innerHTML=FIELDS.map(function(f){return '<div class="row"><div class="k">'+f[1]+'</div><div class="v empty" id="f_'+f[0]+'">—</div></div>';}).join('');
+  }
+  function setField(k,v){var el=document.getElementById('f_'+k); if(!el)return; el.textContent=v; el.classList.remove('empty','flash'); void el.offsetWidth; el.classList.add('flash'); if(v==='—')el.classList.add('empty');}
+  function renderStock(hits){
+    hits=hits||[];
+    stockBody.innerHTML=PRODUCTS.map(function(p){
+      var u=MOCK_UNITS[p.m]; var hit=hits.indexOf(p.m)>-1;
+      return '<tr'+(hit?' class="hit"':'')+'><td>'+p.m+'</td><td>'+p.type+'</td><td class="n">$'+p.price+'</td><td class="n">'+(u===0?'<b>0</b>':u)+'</td></tr>';
+    }).join('');
+  }
+  function add(cls,text,time,mockTag){
+    var d=document.createElement('div'); d.className='msg '+cls;
+    d.innerHTML=esc(text)+(mockTag?'<span class="tag">mock stock</span>':'')+(time?'<span class="time">'+time+'</span>':'');
+    chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
+  }
+  function typing(on){
+    var t=document.getElementById('typing');
+    if(on&&!t){t=document.createElement('div');t.id='typing';t.className='typing';t.textContent='Assistant is typing…';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;}
+    if(!on&&t)t.remove();
+  }
+  function clearTimers(){timers.forEach(clearTimeout);timers=[];typing(false);}
+  function play(name){
+    clearTimers(); current=name; chat.innerHTML=''; renderTicket(); renderStock();
+    var sc=S[name]; prio.textContent='Waiting'; prio.className='pill';
+    var at=300, hadStock=false;
+    sc.steps.forEach(function(st,i){
+      if(st.b){ (function(a){timers.push(setTimeout(function(){typing(true);},a));})(at); at+=900; }
+      (function(st,a){timers.push(setTimeout(function(){
+        typing(false);
+        if(st.sys) add('sys',st.sys);
+        if(st.c) add('cust',st.c,st.t);
+        if(st.b) add('bot',st.b,st.t,hadStock&&/stock/i.test(st.b));
+        if(st.stock){ renderStock(st.stock); hadStock=true; }
+        if(st.tk) Object.keys(st.tk).forEach(function(k){setField(k,st.tk[k]);});
+        if(i===sc.steps.length-1){ prio.textContent=sc.prio; prio.className='pill'+(sc.urgent?' urgent':''); }
+      },a));})(st,at);
+      at+= st.c ? 1100 : st.b ? 1500 : 600;
+    });
+  }
+
+  // ---------- Free-typing (keyword matching) ----------
+  function findProduct(q){
+    var u=q.toUpperCase().replace(/\s+/g,'');
+    for(var i=0;i<PRODUCTS.length;i++){ if(u.indexOf(PRODUCTS[i].m.toUpperCase().replace(/\s+/g,''))>-1) return PRODUCTS[i]; }
+    return null;
+  }
+  function answer(q){
+    var s=q.toLowerCase(), p=findProduct(q);
+    if(p){
+      var u=MOCK_UNITS[p.m];
+      return p.m+' ('+p.type.toLowerCase()+' lock): '+p.desc+'. price $'+p.price+' with free standard installation and 2-year on-site warranty.\nStock: '+(u>0?u+' units':'out of stock')+' (mock data). Our team will confirm tomorrow from 9:30am.';
+    }
+    if(/bundle|door.*gate|gate.*door|set/.test(s)) return 'Door + gate bundles (illustrative prices):\n'+BUNDLES.map(function(b){return '• '+b.name+' – $'+b.price;}).join('\n')+'\nTell me your door type and postal code and I\'ll pass it to the team.';
+    if(/batter/.test(s)) return 'Most models use a rechargeable lithium battery. The website gives 2–3 months in the FAQ and 3–4 months on some product pages, depending on use, so I\'d say "a few months". If it runs flat, a power bank on the emergency port wakes the lock up, and there is also a mechanical key.';
+    if(/how long|install time|duration/.test(s)) return 'From the FAQ: about 2 hours for a wooden door lock and about 1 hour for a metal gate lock. Installations run Mon–Sat, 9:30am–6pm.';
+    if(/gap|close|space|fit/.test(s)) return 'Usually fine. The guide says about 6cm is needed between door and gate, depending on handle direction. A photo from the corridor helps us confirm.';
+    if(/warrant/.test(s)) return 'Locks come with a 2-year local on-site warranty covering functional defects (parts and labour). Cosmetic wear and misuse are not covered.';
+    if(/install|book|appoint|slot|when/.test(s)) return 'After an order is confirmed, the team contacts you to arrange installation (Mon–Sat, 9:30am–6pm). If no one is home at the agreed time, a $50 trip charge applies. What postal code and day suit you?';
+    if(/showroom|visit|where|address/.test(s)) return 'We have two showrooms, one in the east and one in the west. I\'ll ask a colleague to send the address and opening hours tomorrow, or you can book a visit here.';
+    if(/deposit|reserve|pay/.test(s)) return 'You can reserve a lock or promo deal with a $100 deposit per lock. Payment after installation can be arranged on request, subject to terms. The team will confirm details.';
+    if(/discount|cheaper|price|cost|how much/.test(s)) return 'Single locks range from $500 (DL-F) to $880 (DL-A), and door + gate bundles from $900 to $1,200 (illustrative prices). I can\'t offer extra discounts, but I\'ll pass your request to the team.';
+    return 'I\'m not sure about that one, so I\'ve noted it for our team. A colleague will reply tomorrow after 9:30am.';
+  }
+  function send(){
+    var inp=document.getElementById('q'), q=inp.value.trim(); if(!q)return;
+    clearTimers(); add('cust',q,'now'); inp.value='';
+    var p=findProduct(q); if(p) renderStock([p.m]);
+    typing(true);
+    timers.push(setTimeout(function(){typing(false); add('bot',answer(q),'now', !!p);},800));
+  }
+  document.getElementById('send').onclick=send;
+  document.getElementById('q').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  document.querySelectorAll('#scen button[data-s]').forEach(function(b){
+    b.onclick=function(){document.querySelectorAll('#scen button[data-s]').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); play(b.dataset.s);};
+  });
+  document.getElementById('replay').onclick=function(){play(current);};
+  play('bto');
+})();
+</script>
+</body>
+</html>
