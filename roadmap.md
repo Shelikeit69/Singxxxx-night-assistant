@@ -1,6 +1,6 @@
 # SINGXXXX 夜间客服机器人：技术路线与实施计划
 
-v0.8 · 2026-10-06 · Toni
+v0.8.1 · 2026-10-06 · Toni
 
 ## 一页结论
 
@@ -240,7 +240,7 @@ AI 费用的算法，以 Claude Haiku 4.5 为例（输入每百万 token US$1，
 | --- | --- | --- |
 | 经营数据分析 | 每周汇总：几点询问最多，最常被问的问题和型号，机器人答不了的问题，问了但缺货的次数，询问来自哪些区域 | 现有的工单表，攒几个月就够 |
 | 补货提醒 | 库存低于设定数量、又有客户在问时，提醒负责采购的同事 | 库存表和工单表 |
-| 安装路线 | 先按区域把同一天的安装排在一起；接上师傅排班和地图服务（比如 [OneMap](https://www.developer.tech.gov.sg/products/categories/data-and-apis/onemap-apis/overview)）后，每天给出建议路线，运营确认后再发给师傅 | 邮编（已在收集）、师傅排班 |
+| 安装路线 | 先按区域把同一天的安装排在一起；接上师傅排班和地图服务（比如 [OneMap](https://www.onemap.gov.sg/apidocs/)）后，每天给出建议路线，运营确认后再发给师傅 | 邮编（已在收集）、师傅排班 |
 | 售后提醒 | 电池、保修到期、装完后的回访 | 购买和安装记录。公司主动发的 WhatsApp 消息按条收费 |
 | 内部助手 | 同事在 Lark 或 WhatsApp 里直接问库存和排班 | 同一份库存表和排班 |
 | 招聘初筛 | 收集应聘者的可工作时间、经验和证件类型，整理成表 | 招聘要求。录用由人决定 |
@@ -296,6 +296,6 @@ AI 费用的算法，以 Claude Haiku 4.5 为例（输入每百万 token US$1，
 - [DeepSeek 定价](https://api-docs.deepseek.com/quick_start/pricing)
 - [DeepSeek 隐私政策](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
 - [PDPC 指南：跨境转移限制（第 19 章）](https://www.pdpc.gov.sg/-/media/Files/PDPC/PDF-Files/Advisory-Guidelines/the-transfer-limitation-obligation---ch-19-(270717).pdf)
-- [OneMap API（新加坡政府）](https://www.developer.tech.gov.sg/products/categories/data-and-apis/onemap-apis/overview)
+- [OneMap API 文档（新加坡土地管理局，使用前需注册账号）](https://www.onemap.gov.sg/apidocs/)
 - [Cloud Run 定价（Google Cloud）](https://cloud.google.com/run/pricing)
 - [WhatsApp Business App coexistence with Cloud API（Kapso）](https://kapso.com/blog/whatsapp-business-app-coexistence-cloud-api)
