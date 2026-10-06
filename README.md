@@ -11,20 +11,20 @@
 
 用现有 WhatsApp 号码接入云端 AI，夜间自动回复、收集安装信息，第二天早上把整理好的工单交给同事。约 4 周夜间版上线，约 8 周接上库存；每月运行成本估算约 US$68–93（DeepSeek）或 US$77–139（Claude），不含人工。
 
-![系统架构](docs/images/architecture.png)
+![系统架构](architecture.png)
 
 ## 仓库内容
 
 | 路径 | 内容 |
 | --- | --- |
-| [docs/roadmap.md](docs/roadmap.md) | 技术路线与实施计划：接哪些 API、资料库、部署、周期、维护、成本、风险 |
-| [demo/index.html](demo/index.html) | 流程原型（英文界面）：三个夜间对话场景 + 自动生成的交接工单 |
+| [roadmap.md](roadmap.md) | 技术路线与实施计划：接哪些 API、资料库、部署、周期、维护、成本、风险 |
+| [index.html](index.html) | 流程原型（英文界面）：三个夜间对话场景 + 自动生成的交接工单 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本记录 |
 
 ## 怎么看演示
 
-1. 下载 `demo/index.html`（或整个仓库：Code → Download ZIP）。
+1. 下载 `index.html`（或整个仓库：Code → Download ZIP）。
 2. 用浏览器打开，不需要联网。
 3. 点上方三个场景按钮，或在输入框里直接提问（例如 `price of DL-A`、`battery`、`gap`）。
 
-原型用关键词匹配模拟对话，没有连接任何 API；正式版按 `docs/roadmap.md` 接入大模型、WhatsApp 和公司表格。
+原型用关键词匹配模拟对话，没有连接任何 API；正式版按 `roadmap.md` 接入大模型、WhatsApp 和公司表格。
