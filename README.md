@@ -1,0 +1,30 @@
+# SINGXXXX 夜间客服机器人（方案 v0.1）
+
+> 面试方案与流程原型，作者 Toni Zhang（张林思成），2026-10-06。
+> 公司名已匿名为 SINGXXXX，不是该公司官方渠道。演示中的产品名称和价格为示例，库存数量为虚构数据。
+
+## 要解决的问题
+
+下班后和周日的 WhatsApp 询问要等到第二天才有人回复。客户问的多是"我家门能不能装、哪款合适、有没有货"，需要按型号和门型具体回答。
+
+## 方案一句话
+
+用现有 WhatsApp 号码接入云端 AI，夜间自动回复、收集安装信息，第二天早上把整理好的工单交给同事。约 4 周夜间版上线，约 8 周接上库存；每月运行成本估算约 US$68–93（DeepSeek）或 US$77–139（Claude），不含人工。
+
+![系统架构](docs/images/architecture.png)
+
+## 仓库内容
+
+| 路径 | 内容 |
+| --- | --- |
+| [docs/roadmap.md](docs/roadmap.md) | 技术路线与实施计划：接哪些 API、资料库、部署、周期、维护、成本、风险 |
+| [demo/index.html](demo/index.html) | 流程原型（英文界面）：三个夜间对话场景 + 自动生成的交接工单 |
+| [CHANGELOG.md](CHANGELOG.md) | 版本记录 |
+
+## 怎么看演示
+
+1. 下载 `demo/index.html`（或整个仓库：Code → Download ZIP）。
+2. 用浏览器打开，不需要联网。
+3. 点上方三个场景按钮，或在输入框里直接提问（例如 `price of DL-A`、`battery`、`gap`）。
+
+原型用关键词匹配模拟对话，没有连接任何 API；正式版按 `docs/roadmap.md` 接入大模型、WhatsApp 和公司表格。
