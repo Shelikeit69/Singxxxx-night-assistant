@@ -1,6 +1,6 @@
 # SINGXXXX 夜间客服机器人：技术路线与实施计划
 
-v0.6 · 2026-10-06 · Toni
+v0.7 · 2026-10-06 · Toni
 
 ## 一页结论
 
@@ -109,6 +109,18 @@ v0.6 · 2026-10-06 · Toni
 3. 问 AI：把对话、产品表、规则文档发给大模型，由它组织回答。
 4. 调工具：AI 需要时，程序去查库存表、写工单表，再把结果交回给 AI。
 5. 回复并记录：通过 API 把回复发给客户，同时把对话存下来，方便每周抽查。
+
+### 程序放在哪里
+
+WhatsApp 来了新消息，服务商会把消息推到一个网址（webhook）。这个网址后面得有程序随时在线，收到消息后去问 AI、查表、发回复。360dialog 这类服务商只负责转发消息，不跑我们的逻辑，所以这个程序要自己找地方放。
+
+| 方案 | 怎么做 | 好处 | 要注意的 |
+| --- | --- | --- | --- |
+| 1. 托管服务（推荐） | Python 程序放在 Google Cloud Run 这类按请求计费的服务上，有消息才运行 | 不用管服务器；有新加坡机房；按用量计费，成本一节每月预留的 US$5-15 应该够 | 很久没消息时，第一次响应会慢几秒。可以设一台常驻实例避免，但要多花一点钱 |
+| 2. 只用 Lark | 用 Lark 的多维表格、自动化和 AI 功能来做 | 公司如果本来就用 Lark，同事上手快 | 能不能直接收 WhatsApp 消息、调用 AI、查表，还没核实，要找 Lark 确认 |
+| 3. 服务商自带的 AI 机器人 | 选一家自带 AI 客服功能的 WhatsApp 服务商，在它的后台配置 | 不用写代码，也不用服务器 | 月费一般更高；能不能接库存表、写工单，要看平台；数据放在第三方平台上 |
+
+Cloud Run 按请求计费的服务每月有 200 万次请求的免费额度，另有一定的 CPU 和内存用量，但免费额度是按美国机房价格折算的，所以成本一节仍按 US$5-15 保守估计（[Cloud Run 定价](https://cloud.google.com/run/pricing)）。
 
 要开的账号（都用公司名义开，归公司所有）：
 
@@ -224,6 +236,8 @@ AI 费用的算法，以 Claude Haiku 4.5 为例（输入每百万 token US$1，
 11. 公司平时用 Google 还是 Lark？
 12. 哪些问题绝对不能让机器人答？
 13. 这个项目的预算上限是多少，希望什么时候上线？
+14. 公司用的是 Lark 哪个版本？用过它的自动化或 AI 功能吗？
+15. 公司有没有现成的 Google Cloud、AWS 或阿里云账号？
 
 ## 参考资料
 
@@ -234,4 +248,5 @@ AI 费用的算法，以 Claude Haiku 4.5 为例（输入每百万 token US$1，
 - [DeepSeek 隐私政策](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
 - [PDPC 指南：跨境转移限制（第 19 章）](https://www.pdpc.gov.sg/-/media/Files/PDPC/PDF-Files/Advisory-Guidelines/the-transfer-limitation-obligation---ch-19-(270717).pdf)
 - [OneMap API（新加坡政府）](https://www.developer.tech.gov.sg/products/categories/data-and-apis/onemap-apis/overview)
+- [Cloud Run 定价（Google Cloud）](https://cloud.google.com/run/pricing)
 - [WhatsApp Business App coexistence with Cloud API（Kapso）](https://kapso.com/blog/whatsapp-business-app-coexistence-cloud-api)
